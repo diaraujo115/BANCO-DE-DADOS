@@ -3,6 +3,8 @@ DROP DATABASE bd_aulas_triggers;
 CREATE SCHEMA IF NOT EXISTS bd_aulas_triggers DEFAULT CHARACTER SET utf8;
 USE bd_aulas_triggers;
 
+/*Criando tabela Aluno*/
+
 CREATE TABLE IF NOT EXISTS bd_aulas_triggers.Aluno(
 cod INT NOT NULL AUTO_INCREMENT,
 nome VARCHAR (100) NOT NULL,
@@ -11,11 +13,16 @@ status INT NOT NULL,
 PRIMARY KEY (cod)
 )ENGINE=InnoDB;
 
+/*Criando tabela Curso*/
+
 CREATE TABLE IF NOT EXISTS bd_aulas_triggers.Curso(
 cod INT NOT NULL AUTO_INCREMENT,
 descricao VARCHAR (200) NOT NULL,
 PRIMARY KEY (cod)
 )ENGINE=InnoDB;
+
+/*Criando tabela Matricula*/
+/*Aqui será gravado quando um aluno for inserido*/
 
 CREATE TABLE IF NOT EXISTS bd_aulas_triggers.Matricula(
 cod INT NOT NULL AUTO_INCREMENT,
@@ -24,13 +31,16 @@ curso_cod INT NOT NULL,
 PRIMARY KEY (cod)
 )ENGINE=InnoDB;
 
+/*Inserindo cursos*/
 INSERT INTO curso
 	Values (NULL, "CIÊNCIAS DA COMPUTAÇÃO"),
-			(NULL, "TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS"),
-            (NULL, "ENGENHARIA DA COMPUTAÇÃO"),
-            (NULL, "SISTEMAS DA INFORMAÇÃO");
+	       (NULL, "TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS"),
+               (NULL, "ENGENHARIA DA COMPUTAÇÃO"),
+               (NULL, "SISTEMAS DA INFORMAÇÃO");
 			
 SELECT * FROM curso;
+
+/*Criando um Trigger para gravar na tabela Matricula quando houver um insert na tabela Aluno*/
 
 SET DELIMITER $$
 
@@ -42,6 +52,7 @@ AFTER  INSERT ON Aluno
     
 SET DELIMITER ;
 
+/*Inserindo Alunos*/
 INSERT INTO Aluno 
 	VALUES (NULL, "João Paulo Pimentel", 2, 1),
     	   (NULL, "José da Silva", 4, 1);
@@ -49,12 +60,16 @@ INSERT INTO Aluno
     
 SELECT * FROM Aluno;
 
+/*Conferindo se foi gravado na tabela Matricula*/
 SELECT * FROM Matricula;
 
+/*Mostrando todos os Triggers criados*/
 SHOW TRIGGERS;
 
+/*Criando outro trigger para gravar na tabela Alunos_Auditoria quando houver alguma alteração na Tabela Alunos*/
+
 CREATE TABLE IF NOT EXISTS bd_aulas_triggers.Alunos_Auditoria(
-id	INT NOT NULL AUTO_INCREMENT,
+id INT NOT NULL AUTO_INCREMENT,
 cod INT NOT NULL,
 nome VARCHAR (100) NOT NULL,
 modificado_em DATETIME DEFAULT NULL,
@@ -85,6 +100,7 @@ SELECT * FROM Alunos_Auditoria;
 UPDATE Aluno SET nome =  "Laura Satelis" 
 WHERE cod = 2;
 
+/*Criando outro trigger para gravar na tabela Cursos_Auditoria quando houver alguma alteração na Tabela Curso*/ 
 CREATE TABLE IF NOT EXISTS bd_aulas_triggers.Cursos_Auditoria(
 id	INT NOT NULL AUTO_INCREMENT,
 cod INT NOT NULL,
@@ -113,6 +129,5 @@ UPDATE Curso SET descricao =  "ENGENHARARIA DE SOFTWARE"
 WHERE cod = 3;
 
 SELECT * FROM Cursos_Auditoria;
-SELECT * FROM Curso
-;
+SELECT * FROM Curso;
 
