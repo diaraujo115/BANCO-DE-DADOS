@@ -8,23 +8,9 @@ CREATE TABLE IF NOT EXISTS aluno (
 
 id INT NOT NULL,
 
-4567
+
 
 nome VARCHAR(100) NOT NULL
-
-7 8
-
-9
-
-10
-
-11
-
-12
-
-13
-
-14
 
 matricula VARCHAR(45) NOT NULL,
 
@@ -175,6 +161,58 @@ INNER JOIN prova p ON n.prova_id = p.id
 
 ORDER BY a.id, nota_calculada DESC;
 
+
+
+
+
+/*1) Criar uma function (Mostra_Maior_Nota) para
+retornar a maior nota na tabela nota do nosso
+exemplo.*/
+
+DELIMITER $
+
+CREATE FUNCTION Mostra_Maior_Nota() RETURNS DECIMAL(10,2)
+BEGIN
+    DECLARE maior DECIMAL(10,2);
+    SELECT MAX(valor_nota) INTO maior FROM nota;
+    RETURN maior;
+END $
+
+DELIMITER ;
+
+drop function Mostra_Maior_Nota;
+
+SELECT Mostra_Maior_Nota() AS maior_nota;
+
+/*2) Criar uma function (Mostra_Media) de cada aluno,
+ou seja, aluno_id 1 fez 6 provas, então vamos ter
+que somar as notas dele e dividir por 6.*/
+
+DELIMITER $
+
+CREATE FUNCTION Mostra_Media(media_aluno INT) RETURNS DECIMAL(10,2)
+BEGIN
+    DECLARE media DECIMAL(10,2);
+    DECLARE total_provas INT;
+    
+    IF media_aluno IS NULL THEN
+        SELECT AVG(valor_nota) INTO media FROM nota;
+    ELSE
+        SELECT COUNT(valor_nota) INTO total_provas FROM nota WHERE aluno_id = media_aluno;
+    
+        IF total_provas > 0 THEN
+            SELECT SUM(valor_nota) / total_provas INTO media FROM nota WHERE aluno_id = media_aluno;
+        ELSE
+            SET media = 0;
+        END IF;
+    END IF;
+    
+    RETURN media;
+END $
+
+DELIMITER ;
+
+SELECT id, nome, Mostra_Media(id) AS media_aluno FROM aluno;
 
 
 
