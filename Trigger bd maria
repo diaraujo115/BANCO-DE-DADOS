@@ -1,0 +1,18 @@
+CREATE TRIGGER tg_registroCliente
+AFTER INSERT ON tabela_clientes
+FOR EACH ROW
+BEGIN
+    DECLARE codCompra VARCHAR(255);
+    
+    -- Buscar o nome do funcionário na tabela 'funcionario' com base no ID do funcionário que fez o insert
+    SELECT codCompra INTO codCompra FROM Compra WHERE id = NEW.Compra_id;
+    
+    -- Inserir o registro na tabela 'tabela_registro'
+    INSERT INTO registroCliente 
+    SET acao = 'insert',
+    cod_Cliente = id_cliente,
+    cod_Compra = codCompra, 
+    modificado_em = NOW(); 
+END;
+
+SET DELIMITER ;
