@@ -1,0 +1,67 @@
+CREATE  SCHEMA 	IF	NOT	EXISTS	DAM	DEFAULT CHARACTER SET utf8;
+
+Use DAM;
+-- drop database dam;
+
+CREATE TABLE Cliente (
+codCliente INT (3) NOT NULL,
+nome VARCHAR (45)NOT NULL,
+email VARCHAR (45)NOT NULL,
+
+telefone VARCHAR(11)NOT NULL,
+cnpj VARCHAR (15)NOT NULL,
+cpf VARCHAR (11)NOT NULL
+);
+
+
+CREATE TABLE Funcionario (
+codFuncionario INT NOT NULL,
+nome VARCHAR(45) NOT NULL,
+funcao VARCHAR (20)NOT NULL
+);
+
+CREATE TABLE Ingrediente ( codIngre INT(4) NOT NULL, sabor VARCHAR (40),
+recheio VARCHAR (40),
+cobertura VARCHAR (40), valorIngre DECIMAL NOT NULL
+);
+
+
+CREATE TABLE Bolo ( codBolo INT (3) NOT NULL,
+nome VARCHAR(20)NOT NULL, peso DECIMAL NOT NULL,
+valor_kilo DECIMAL
+
+);
+
+CREATE TABLE Empresa(
+razaoSocial VARCHAR(40) NOT NULL, 
+nomeFantasia VARCHAR (40) NOT NULL, 
+Endereco VARCHAR (45) NOT NULL, 
+email VARCHAR (40) NOT NULL,
+Funcionario_codFuncionario INT,
+CONSTRAINT fk_Funcionario_codFuncionario
+FOREIGN KEY (Funcionario_codFuncionario)
+REFERENCES Funcionario(codFuncionario))
+ENGINE=InnoDB;
+
+
+CREATE TABLE Customizacao (
+codPedido INT(3) NOT NULL,
+valor_kilo DECIMAL NOT NULL,
+peso DECIMAL NOT NULL,
+ingrediente_codIngre INT,
+FOREIGN	KEY	(ingrediente_codIngre)	REFERENCES Ingrediente(codIngre));
+
+
+CREATE TABLE Compra (
+codCompra INT (4) NOT NULL,
+datahora DATETIME NOT NULL, 
+valor_total DECIMAL NOT NULL,
+Cliente_codCliente INT(3),
+Funcionario_codFuncionario INT(3),
+bolo_codBolo INT,
+customizacao_codPedido INT,
+FOREIGN	KEY	(Cliente_codCliente)	REFERENCES cliente(codCliente),
+FOREIGN KEY (Funcionario_codFuncionario) REFERENCES Funcionario(cod_Funcionario),
+FOREIGN KEY (bolo_codBolo) REFERENCES bolo(codBolo),
+FOREIGN	KEY	(customizacao_codPedido)	REFERENCES customizacao(codPedido)
+);
