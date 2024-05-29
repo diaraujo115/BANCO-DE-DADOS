@@ -153,8 +153,7 @@ select*from cliente;
 
 DELIMITER //
 CREATE FUNCTION CalcularTotalComprasCliente(
-    p_codCliente INT,
-    p_nome VARCHAR(200)
+    p_codCliente INT
    
 ) RETURNS DECIMAL(10, 2) 
 BEGIN
